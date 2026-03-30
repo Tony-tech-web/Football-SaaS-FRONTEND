@@ -1,0 +1,5 @@
+{
+  "name": "STARK AI Sports Prediction",
+  "description": "Production-grade SaaS dashboard for a distributed AI sports prediction engine. Features real-time control panels, 6-layer confidence matrix, and automated formula self-healing.",
+  "requestFramePermissions": []
+}
