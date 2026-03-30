@@ -1,11 +1,22 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SlipStatus, ConfidenceTier, FailedLayer } from "../../src/types";
 
-// Initialize Gemini AI
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+let aiClient: GoogleGenAI | null = null;
+
+function getAIClient(): GoogleGenAI {
+  if (!aiClient) {
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) {
+      throw new Error("GEMINI_API_KEY environment variable is required");
+    }
+    aiClient = new GoogleGenAI({ apiKey: key });
+  }
+  return aiClient;
+}
 
 export async function extractSlipFromImage(imageBase64: string, mimeType: string) {
   const model = "gemini-3-flash-preview";
+  const ai = getAIClient();
   
   try {
     const response = await ai.models.generateContent({
