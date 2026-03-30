@@ -11,85 +11,111 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Activity
+  Activity,
+  X
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-  { icon: Zap, label: 'Predictions', path: '/predictions' },
-  { icon: Cpu, label: 'Live Engine', path: '/live-engine' },
-  { icon: Receipt, label: 'Bet Slips', path: '/bet-slips' },
-  { icon: CheckCircle2, label: 'Results', path: '/results' },
-  { icon: Dna, label: 'Formula Engine', path: '/formula-engine' },
-  { icon: MonitorDot, label: 'Queue Monitor', path: '/queue-monitor' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+  { icon: Zap, label: 'Predictions', path: '/dashboard/predictions' },
+  { icon: Cpu, label: 'Live Engine', path: '/dashboard/live-engine' },
+  { icon: Receipt, label: 'Bet Slips', path: '/dashboard/bet-slips' },
+  { icon: CheckCircle2, label: 'Results', path: '/dashboard/results' },
+  { icon: Dna, label: 'Formula Engine', path: '/dashboard/formula-engine' },
+  { icon: MonitorDot, label: 'Queue Monitor', path: '/dashboard/queue-monitor' },
+  { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isMobileOpen: boolean;
+  setIsMobileOpen: (open: boolean) => void;
+}
+
+export const Sidebar = ({ isMobileOpen, setIsMobileOpen }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <aside 
-      className={cn(
-        "fixed left-0 top-0 h-screen bg-black/40 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50 flex flex-col",
-        isCollapsed ? "w-20" : "w-64"
+    <>
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
       )}
-    >
-      <div className="p-6 flex items-center justify-between">
-        {!isCollapsed && (
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#8B4513] rounded-lg flex items-center justify-center">
-              <Activity className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tighter text-white">STARK</span>
-          </div>
+
+      <aside 
+        className={cn(
+          "fixed left-0 top-0 h-screen bg-black/40 backdrop-blur-2xl border-r border-white/10 transition-all duration-300 z-50 flex flex-col",
+          isCollapsed ? "w-20" : "w-64",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
-        <button 
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 hover:bg-white/5 rounded-lg transition-colors text-white/60 hover:text-white"
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
-      </div>
-
-      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => cn(
-              "flex items-center gap-3 px-3 py-3 rounded-xl transition-all group relative",
-              isActive 
-                ? "bg-[#8B4513]/20 text-[#D2691E] border border-[#8B4513]/30" 
-                : "text-white/60 hover:text-white hover:bg-white/5"
-            )}
-          >
-            <item.icon className={cn("w-5 h-5", isCollapsed ? "mx-auto" : "")} />
-            {!isCollapsed && <span className="font-medium">{item.label}</span>}
-            {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
-                {item.label}
-              </div>
-            )}
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="p-4 border-t border-white/10">
-        <div className={cn(
-          "flex items-center gap-3 p-3 rounded-xl bg-white/5",
-          isCollapsed ? "justify-center" : ""
-        )}>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8B4513] to-[#D2691E]" />
+      >
+        <div className="p-6 flex items-center justify-between">
           {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">System Admin</p>
-              <p className="text-xs text-white/40 truncate">tonyalidu@gmail.com</p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#8B4513] rounded-lg flex items-center justify-center">
+                <Activity className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-bold tracking-tighter text-white">STARK</span>
             </div>
           )}
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="hidden md:flex p-2 hover:bg-white/5 rounded-lg transition-colors text-white/60 hover:text-white"
+            >
+              {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+            </button>
+            <button 
+              onClick={() => setIsMobileOpen(false)}
+              className="md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors text-white/60 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
-      </div>
-    </aside>
+
+        <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto scrollbar-hide">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={() => setIsMobileOpen(false)}
+              className={({ isActive }) => cn(
+                "flex items-center gap-3 px-3 py-3 rounded-xl transition-all group relative",
+                isActive 
+                  ? "bg-[#8B4513]/20 text-[#D2691E] border border-[#8B4513]/30 shadow-[inset_0_0_20px_rgba(139,69,19,0.1)]" 
+                  : "text-white/60 hover:text-white hover:bg-white/5"
+              )}
+            >
+              <item.icon className={cn("w-5 h-5", isCollapsed ? "mx-auto" : "")} />
+              {!isCollapsed && <span className="font-medium">{item.label}</span>}
+              {isCollapsed && (
+                <div className="absolute left-full ml-2 px-2 py-1 bg-black/80 backdrop-blur-md border border-white/10 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  {item.label}
+                </div>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-white/10 bg-black/20">
+          <div className={cn(
+            "flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5",
+            isCollapsed ? "justify-center" : ""
+          )}>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8B4513] to-[#D2691E] shadow-[0_0_10px_rgba(139,69,19,0.5)] shrink-0" />
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">System Admin</p>
+                <p className="text-xs text-white/40 truncate">tonyalidu@gmail.com</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+    </>
   );
 };
