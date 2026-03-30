@@ -153,7 +153,7 @@ export const Results = () => {
     const fetchResults = async () => {
       try {
         const response = await apiService.getResults();
-        setResults(response.data);
+        setResults(response.data.predictions || []);
       } catch (error) {
         console.error('Failed to fetch results:', error);
       }

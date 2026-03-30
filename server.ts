@@ -268,6 +268,10 @@ async function startServer() {
     res.json({ jobId: req.params.jobId, progress: 100, status: 'completed' });
   });
 
+  app.get("/queue/admin/snapshot", (req, res) => {
+    res.json({ queue: [], stats: { active: 0, completed: 0, failed: 0 } });
+  });
+
   app.post("/admin/snapshot", (req, res) => {
     res.json({ status: 'snapshot_triggered' });
   });

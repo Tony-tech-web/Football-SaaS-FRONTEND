@@ -143,8 +143,8 @@ export const PredictionsPage = () => {
       try {
         const response = await apiService.getSlips();
         // Map slips to predictions for the UI
-        const allPredictions = response.data.slips.flatMap(slip => 
-          slip.parsedMatches.map(m => ({
+        const allPredictions = (response.data.slips || []).flatMap(slip => 
+          (slip.parsedMatches || []).map(m => ({
             ...m,
             id: slip.id + '_' + m.match,
             status: slip.status,

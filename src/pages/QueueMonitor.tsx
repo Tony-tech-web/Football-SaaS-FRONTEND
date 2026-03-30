@@ -97,7 +97,7 @@ export const QueueMonitor = () => {
     const fetchJobs = async () => {
       try {
         const response = await apiService.getEngineSnapshot();
-        setJobs(response.data.queue);
+        setJobs(response.data.queue || []);
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
       }
